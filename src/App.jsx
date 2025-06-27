@@ -5,9 +5,11 @@ import BookList from "./components/BookList";
 
 const App = () => {
   const [books, setBooks] = useState([]);
- 
+
+  const [isVisible, setIsVisible] = useState(false);
+
   const getBooks = () => {
-     HttpClient.get("/books")
+    HttpClient.get("/books")
       .then((response) => {
         setBooks(response.data);
       })
@@ -30,11 +32,26 @@ const App = () => {
       .catch((error) => console.log(error));
   };
 
+  const updateBook = (id, update) => {
+    // update UI
+
+    setBooks(
+      books.map((book) => (book.id === id ? { ...book, ...update } : book))
+    );
+    // update Server
+    HttpClient.put(`/books/${id}`, update)
+      .then((response) => console.log(response))
+      .catch((error) => console.log(error));
+  };
   return (
-    <>
+    <div className="app">
       <BookForm onAddBook={addBook} />
-      <BookList books={books} onDeleteBook={deleteBook} />
-    </>
+      <BookList
+        onUpdateBook={updateBook}
+        books={books}
+        onDeleteBook={deleteBook}
+      />
+    </div>
   );
 };
 

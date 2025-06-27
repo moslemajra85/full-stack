@@ -1,5 +1,6 @@
 import Book from "./Book";
 
+
 const BookList = (props) => {
   return (
     <div
@@ -13,7 +14,12 @@ const BookList = (props) => {
       }}
     >
       {props.books.map((book, idx) => (
-         <Book key={idx} book={book} onDeleteBook={props.onDeleteBook}/>
+        <Book
+          onUpdateBook={props.onUpdateBook}
+          key={idx}
+          book={book}
+          onDeleteBook={props.onDeleteBook}
+        />
       ))}
       <style>
         {`

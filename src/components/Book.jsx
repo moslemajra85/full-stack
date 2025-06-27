@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
+import BookForm from "./BookForm";
+import { FaPencilAlt } from "react-icons/fa";
 
 const Book = (props) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  const handleVisility = () => {
+    setIsVisible(!isVisible);
+  };
   return (
     <div
       key={props.book.id}
@@ -13,9 +20,11 @@ const Book = (props) => {
         flexDirection: "column",
         alignItems: "center",
         transition: "transform 0.3s cubic-bezier(.4,2,.6,1), box-shadow 0.3s",
-       }}
+      }}
     >
       <span style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>📚</span>
+
+      <FaPencilAlt onClick={handleVisility} />
       <h2
         style={{
           fontSize: "1.3rem",
@@ -27,6 +36,9 @@ const Book = (props) => {
       >
         {props.book.title}
       </h2>
+
+      {isVisible ? <BookForm /> : null}
+
       <h3
         style={{
           fontSize: "1rem",
