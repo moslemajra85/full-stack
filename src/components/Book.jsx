@@ -3,11 +3,15 @@ import BookForm from "./BookForm";
 import { FaPencilAlt } from "react-icons/fa";
 
 const Book = (props) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const handleVisility = () => {
-    setIsVisible(!isVisible);
+  const handleEditToggle = () => setIsEditing(!isEditing);
+
+  const handleUpdate = (updatedBook) => {
+    props.onUpdateBook(props.book.id, updatedBook);
+    setIsEditing(false);
   };
+
   return (
     <div
       key={props.book.id}
@@ -23,8 +27,7 @@ const Book = (props) => {
       }}
     >
       <span style={{ fontSize: "3rem", marginBottom: "0.5rem" }}>📚</span>
-
-      <FaPencilAlt onClick={handleVisility} />
+      <FaPencilAlt onClick={handleEditToggle} style={{ cursor: "pointer" }} />
       <h2
         style={{
           fontSize: "1.3rem",
@@ -36,9 +39,13 @@ const Book = (props) => {
       >
         {props.book.title}
       </h2>
-
-      {isVisible ? <BookForm /> : null}
-
+      {isEditing ? (
+        <BookForm
+          action="update"
+          initialValues={props.book}
+          onBookAction={handleUpdate}
+        />
+      ) : null}
       <h3
         style={{
           fontSize: "1rem",

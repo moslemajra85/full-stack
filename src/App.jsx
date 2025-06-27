@@ -8,6 +8,7 @@ const App = () => {
 
   const [isVisible, setIsVisible] = useState(false);
 
+  // fecth books
   const getBooks = () => {
     HttpClient.get("/books")
       .then((response) => {
@@ -18,10 +19,16 @@ const App = () => {
 
   useEffect(getBooks, []);
 
+  // add new Books
   const addBook = (book) => {
     setBooks([book, ...books]);
+    // send Post request to the server
+    HttpClient.post("/books", book)
+      .then((response) => console.log(response.data))
+      .catch((error) => console.log(error));
   };
 
+  // delete Books
   const deleteBook = (id) => {
     // update ui
     setBooks(books.filter((book) => book.id !== id));
@@ -32,6 +39,7 @@ const App = () => {
       .catch((error) => console.log(error));
   };
 
+  // update
   const updateBook = (id, update) => {
     // update UI
 
@@ -45,7 +53,7 @@ const App = () => {
   };
   return (
     <div className="app">
-      <BookForm onAddBook={addBook} />
+      <BookForm action="add" onBookAction={addBook} />
       <BookList
         onUpdateBook={updateBook}
         books={books}

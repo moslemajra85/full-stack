@@ -1,10 +1,15 @@
-import React, { useState } from "react";
-import HttpClient from "../httpClient/httpClient";
+import React, { useState, useEffect } from "react";
 
-const BookForm = ({ onAddBook }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [price, setPrice] = useState(0);
+const BookForm = ({ onBookAction, action, initialValues }) => {
+  const [title, setTitle] = useState(initialValues?.title || "");
+  const [author, setAuthor] = useState(initialValues?.author || "");
+  const [price, setPrice] = useState(initialValues?.price || 0);
+
+  useEffect(() => {
+    setTitle(initialValues?.title || "");
+    setAuthor(initialValues?.author || "");
+    setPrice(initialValues?.price || 0);
+  }, [initialValues]);
 
   const reset = () => {
     setTitle("");
@@ -12,36 +17,18 @@ const BookForm = ({ onAddBook }) => {
     setPrice(0);
   };
 
-
-  const handleNameChange = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleAuthorChange = (e) => {
-    setAuthor(e.target.value);
-  };
-
-  const handlePriceChange = (e) => {
-    setPrice(+e.target.value);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const book = {
+      ...initialValues, // includes id for update
       title,
       author,
       price,
     };
+    onBookAction(book);
+    if (action === "add") reset();
+  };
 
-    // update the ui
-    onAddBook(book);
-    reset()
-    // send Post request to the server
-    HttpClient.post("/books", book)
-      .then((response) => console.log(response.data))
-      .catch((error) => console.log(error));
-
-   };
   return (
     <div className="book-form-container">
       <form onSubmit={handleSubmit}>
@@ -49,37 +36,36 @@ const BookForm = ({ onAddBook }) => {
           <label>📖 Title</label>
           <input
             value={title}
-            onChange={handleNameChange}
+            onChange={(e) => setTitle(e.target.value)}
             className="form-control"
             type="text"
             required
           />
         </div>
-
         <div className="form-group">
           <label>✍️ Author</label>
           <input
             value={author}
-            onChange={handleAuthorChange}
+            onChange={(e) => setAuthor(e.target.value)}
             className="form-control"
             type="text"
             required
           />
         </div>
-
         <div className="form-group">
           <label>💵 Price</label>
           <input
             value={price}
-            onChange={handlePriceChange}
+            onChange={(e) => setPrice(+e.target.value)}
             className="form-control"
             type="number"
             min="0"
             required
           />
         </div>
-
-        <button type="submit">➕ Add Book</button>
+        <button type="submit">
+          {action === "add" ? "➕ Add Book" : "🔼 Update"}
+        </button>
       </form>
     </div>
   );
