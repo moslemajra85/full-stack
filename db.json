@@ -1,0 +1,16 @@
+{
+  "books": [
+    {
+      "id": "3",
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "price": 45
+    },
+    {
+      "id": "9",
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "price": 58
+    }
+  ]
+}
